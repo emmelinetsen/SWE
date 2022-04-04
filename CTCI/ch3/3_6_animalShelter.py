@@ -26,6 +26,13 @@ class AnimalShelter:
             self.cat_shelter.append(animal)
 
     def dequeueAny(self): #O(1)
+        if len(self.dog_shelter) == 0:
+            return self.cat_shelter.popleft()
+        elif len(self.cat_shelter) == 0:
+            return self.dog_shelter.popleft()
+        elif len(self.dog_shelter) == 0 and len(self.cat_shelter) == 0:
+            raise Exception("Error. Empty shelter!")
+
         if self.dog_shelter[0].counter < self.cat_shelter[0].counter:
             return self.dog_shelter.popleft()
         else:
@@ -81,6 +88,17 @@ class TestAnimalShelter(unittest.TestCase):
         self.assertEqual(s.returnShelter("Dog"), [1,3,5])
         self.assertEqual(s.returnShelter("Cat"), [4,6])
 
+    def test_dequeueCat_exception(self):
+        s = AnimalShelter()
+        for i in range(3):
+            s.enqueue("Dog")
+            s.enqueue("Cat")
+        for i in range(3):
+            s.dequeueCat()
+        with self.assertRaises(Exception):
+            s.dequeueCat()
+        self.assertEqual(s.returnShelter("Dog"), [1,3,5])
+
     def test_dequeueAny(self):
         s = AnimalShelter()
         for i in range(3):
@@ -91,3 +109,22 @@ class TestAnimalShelter(unittest.TestCase):
         self.assertEqual(s.returnShelter("Dog"), [3,5])
         self.assertEqual(s.returnShelter("Cat"), [4,6])
 
+    def test_dequeueAny_noMoreDogs(self): # test when all the dogs (all have the smallest counter value) are no longer in shelter
+        s = AnimalShelter()
+        s.enqueue("Dog")
+        s.enqueue("Cat")
+        s.dequeueDog()
+        s.dequeueAny()
+        self.assertEqual(s.returnShelter("Dog"), [])
+        self.assertEqual(s.returnShelter("Cat"), [])
+
+    def test_dequeueAny_noMoreAnimals(self):
+        s = AnimalShelter()
+        s.enqueue("Dog")
+        s.enqueue("Cat")
+        s.dequeueDog()
+        s.dequeueAny()
+        with self.assertRaises(Exception):
+            s.dequeueAny()
+        self.assertEqual(s.returnShelter("Dog"), [])
+        self.assertEqual(s.returnShelter("Cat"), [])
