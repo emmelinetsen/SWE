@@ -6,10 +6,11 @@
 # have an int variable hasNullNodes to check whether any of the children nodes have null nodes. +1 if there is
 # if hasNullNodes has been set for next level, set a separate bool variable nullCheckedForLevel to T
 # nullCheckedForLevel will be set back to false at the end of the current level
-# if hasNullNodes > 1, then return false because it means the subtree height difference is more than 1
+# if hasNullNodes > 2, then return false because it means the subtree height difference is more than 2 (leaves also
+# have null nodes)
 
-from queue import Queue
 import unittest
+
 
 class BinaryTree:
     def __init__(self, val):
@@ -17,53 +18,40 @@ class BinaryTree:
         self.left = None
         self.right = None
 
+
+# time complexity: O(N) where N is the # of nodes in the tree
+# space complexity: O(2^H) where H is the height of the tree
+
 def check_balanced(root):
-    currentLevel = Queue()
-    nextLevel = Queue()
-    currentLevel.put(root)
-    hasNullNodes = 0
-    nullCheckedForLevel = False
+    if not root:
+        return True
+    return abs(maxHeight(root.left) - maxHeight(root.right)) <= 1 and check_balanced(root.left) and check_balanced(
+        root.right)
 
-    while not currentLevel.empty():
-        if hasNullNodes > 1:
-            return False
-        node = currentLevel.get()
-        if node.left is not None:
-            nextLevel.put(node.left)
-        if node.left is None and not nullCheckedForLevel: # not counting for null nodes of the same level
-            hasNullNodes += 1
-            nullCheckedForLevel = True
-        if node.right is not None:
-            nextLevel.put(node.right)
-        if node.right is None and not nullCheckedForLevel: # not counting for null nodes of the same level
-            hasNullNodes += 1
-            nullCheckedForLevel = True
 
-        if currentLevel.empty(): # finished iterating through the current level
-            tmp = currentLevel
-            currentLevel = nextLevel
-            nextLevel = tmp
-            nullCheckedForLevel = False
-    return True
+def maxHeight(root):
+    if not root:
+        return 0
+    return max(maxHeight(root.left), maxHeight(root.right)) + 1
+
 
 class Test(unittest.TestCase):
-    def test_checkBalanced_leftRightNodesPopulated(self):
+    def test_maxHeight_1(self):
+        a = BinaryTree("a")
+
+        self.assertEqual(1, maxHeight(a))
+
+    def test_maxHeight_2(self):
         a = BinaryTree("a")
         b = BinaryTree("b")
         c = BinaryTree("c")
 
         a.left = b
         a.right = c
-        self.assertEqual(True, check_balanced(a))
 
-    def test_checkBalanced_onlyLeftNodePopulated(self):
-        a = BinaryTree("a")
-        b = BinaryTree("b")
+        self.assertEqual(2, maxHeight(a))
 
-        a.left = b
-        self.assertEqual(True, check_balanced(a))
-
-    def test_checkBalanced_heightDifference1(self):
+    def test_maxHeight_3(self):
         a = BinaryTree("a")
         b = BinaryTree("b")
         c = BinaryTree("c")
@@ -73,6 +61,55 @@ class Test(unittest.TestCase):
         a.right = c
 
         b.left = d
+
+        self.assertEqual(3, maxHeight(a))
+
+    def test_checkBalanced_leftRightNodesPopulated(self):
+        a = BinaryTree("a")
+        b = BinaryTree("b")
+        c = BinaryTree("c")
+
+        a.left = b
+        a.right = c
+        self.assertEqual(True, check_balanced(a))
+
+    def test_checkBalanced_singleNode(self):
+        a = BinaryTree("a")
+
+        self.assertEqual(True, check_balanced(a))
+
+    def test_checkBalanced_empty(self):
+        self.assertEqual(True, check_balanced([]))
+
+    def test_checkBalanced_onlyLeftNodePopulated(self):
+        a = BinaryTree("a")
+        b = BinaryTree("b")
+
+        a.left = b
+        self.assertEqual(True, check_balanced(a))
+
+    def test_checkBalanced_heightDifference1_left(self):
+        a = BinaryTree("a")
+        b = BinaryTree("b")
+        c = BinaryTree("c")
+        d = BinaryTree("d")
+
+        a.left = b
+        a.right = c
+
+        b.left = d
+        self.assertEqual(True, check_balanced(a))
+
+    def test_checkBalanced_heightDifference1_right(self):
+        a = BinaryTree("a")
+        b = BinaryTree("b")
+        c = BinaryTree("c")
+        d = BinaryTree("d")
+
+        a.left = b
+        a.right = c
+
+        c.left = d
         self.assertEqual(True, check_balanced(a))
 
     def test_checkBalanced_heightDifference2(self):
@@ -89,3 +126,17 @@ class Test(unittest.TestCase):
 
         d.left = e
         self.assertEqual(False, check_balanced(a))
+
+    def test_checkBalanced_heightDifference(self):
+        a = BinaryTree("a")
+        b = BinaryTree("b")
+        c = BinaryTree("c")
+        d = BinaryTree("d")
+        e = BinaryTree("e")
+
+        a.left = b
+        a.right = c
+
+        c.left = d
+        c.right = e
+        self.assertEqual(True, check_balanced(a))
