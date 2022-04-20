@@ -13,7 +13,7 @@ class TreeNode:
 def checkSubtree(T1, T2):
     q = Queue()
     q.put(T1)
-    while not q.empty():
+    while not q.empty(): # n is number of nodes in T1, m is number of nodes in T2. O(n)
         node = q.get()
         if node.val == T2.val and compareTree(node, T2):
             return True
@@ -24,7 +24,7 @@ def checkSubtree(T1, T2):
             q.put(node.right)
     return False
 
-def compareTree(T1, T2):
+def compareTree(T1, T2): # O(m)
     node1 = T1
     node2 = T2
     if not node1 and node2 or node1 and not node2:
