@@ -23,6 +23,7 @@ def coins(cents): # incorrect implementation
 
 def solution(coins): # correct implementation
 
+    # coin_change_solution returns blah blah given the amount, coins, idx
     def coin_change_solution(amount, denoms, idx):
         if idx >= len(denoms) - 1: # last denom
             return 1
@@ -31,7 +32,7 @@ def solution(coins): # correct implementation
         i = 0
         while i * denomAmount <= amount: # uses the same amount to determine permutations
             remaining = amount - i * denomAmount
-            ways += coin_change_solution(remaining,denoms, idx + 1)
+            ways += coin_change_solution(remaining, denoms, idx + 1)
             i += 1
         return ways
 
