@@ -1,5 +1,4 @@
-# given 2 sorted arrays A and B
-# where A has a large enough buffer at the end to hold B
+# given 2 sorted arrays A and B where A has a large enough buffer at the end to hold B
 # merge B into A in sorted order
 
 # brute force - create a new array c. this array would hold both sorted values in a and b
