@@ -29,13 +29,6 @@
 # do a binary search of that #
 
 
-def num_occ_binary_search(arr):
-
-    start = 0
-    end = len(arr) - 1
-    res = dict()
-    # while start <= end:
-
 
 def num_occurrences(arr):
     res = dict()
