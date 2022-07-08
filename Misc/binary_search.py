@@ -10,6 +10,20 @@ import unittest
 ## if exist: the position of the left most number
 ## doesn't exist: the position where the number would be
 
+def bs(arr, num):
+    start = 0
+    end = len(arr)-1
+    mid = (end-start)//2
+    if arr[mid] == num:
+        return mid
+    if arr[mid] < num:
+        return 1 + bs(arr[mid+1], num)
+    else:
+        return bs(arr[0:mid], num)
+    # didn't find the number
+    if len(arr) == 1:
+        return
+
 def binary_search(arr, num):
     start = 0
     end = len(arr)-1
@@ -34,5 +48,8 @@ def binary_search(arr, num):
 if __name__ == "__main__":
     arr = [1,1,2,2,2,2,2,3,3,4]
     print(binary_search(arr,2.5))
+
+    arr_2 = [1,2,3,4]
+    print(bs(arr_2,2))
 
 
