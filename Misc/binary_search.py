@@ -24,6 +24,8 @@ def bs(arr, num):
     if len(arr) == 1:
         return
 
+# space - O(logn) - where n is the len(arr). the code will be going at most logn deep in the stack for the recursive call
+# time - O(logn)
 def binary_search(arr, num):
     start = 0
     end = len(arr)-1
