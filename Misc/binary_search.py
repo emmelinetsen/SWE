@@ -24,6 +24,18 @@ def bs(arr, num):
     else:
         return bs(arr[0:mid], num)
 
+def bs1(arr, num):
+    if len(arr) == 0:
+        return 0
+    left, right = 0, len(arr) - 1
+    mid = (right - left)//2
+    if arr[mid] == num:
+        return mid
+    if arr[mid] < num:
+        return 1 + bs1(arr[mid+1:], num)
+    else:
+        return bs1(arr[0:mid], num)
+
 
 # space - O(logn) - where n is the len(arr). the code will be going at most logn deep in the stack for the recursive call
 # time - O(logn)
@@ -55,5 +67,9 @@ if __name__ == "__main__":
 
     arr_2 = [1,2,3,4]
     print(bs(arr_2,2))
+    print(bs1(arr_2,2))
 
+    arr_3 = [1,2,3,4,5]
+    print(bs(arr_3,3))
+    print(bs1(arr_3,3))
 
